@@ -37,11 +37,18 @@ public class BoardGUI {
     }
 
     private void movePiece(int x, int y) {
-        int[] spacePos = board.getPos();
         try {
             if (board.movePiece(x, y)) {
-                jButtons.get(spacePos[1]).get(spacePos[0]).setText(board.getTile(spacePos[0], spacePos[1]));
-                jButtons.get(y).get(x).setText("");
+                for(int a = 0; a < 4; a++) {
+                    for(int b = 0; b < 4; b++) {
+                        String tile = board.getTile(b, a);
+                        if (!Objects.equals(tile, "0")) {
+                            jButtons.get(a).get(b).setText(tile);
+                        } else {
+                            jButtons.get(a).get(b).setText("");
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

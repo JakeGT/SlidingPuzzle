@@ -3,6 +3,7 @@ public class SlidingPuzzle {
         PuzzleBoard board = new PuzzleBoard();
         try {
             board.shuffleBoard(100);
+            System.out.println("Game Start");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

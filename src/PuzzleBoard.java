@@ -24,10 +24,6 @@ public class PuzzleBoard {
         return string.toString();
     }
 
-    public int[] getPos() {
-        return new int[] {spacePosX, spacePosY};
-    }
-
     public String getTile(int x, int y) {
         return Integer.toString(board[y][x]);
     }
@@ -58,6 +54,31 @@ public class PuzzleBoard {
         return possibleMoves;
     }
 
+    private void longSlide(int posX, int posY) throws Exception {
+        if (spacePosX - posX == 0) {
+            if (spacePosY - posY > 0) { // to the left side
+                for (int i = 0; i < spacePosY - posY; i++) {
+                    movePiece(spacePosX, spacePosY - 1);
+                }
+            } else {
+                for (int i = 0; i < posY - spacePosY; i++) {
+                    movePiece(spacePosX, spacePosY + 1);
+                }
+            }
+        } else {
+            if (spacePosX - posX > 0) { //above
+                for (int i = 0; i < spacePosX - posX; i++) {
+                    movePiece(spacePosX - 1, spacePosY);
+                }
+            } else {
+                for (int i = 0; i < posX - spacePosX; i++) {
+                    movePiece(spacePosX + 1, spacePosY);
+                }
+            }
+        }
+        movePiece(posX, posY);
+    }
+
     public boolean movePiece(int posX, int posY) throws Exception {
         if (posX > 3 || posY > 3) {
             throw new Exception("Position Invalid");
@@ -65,16 +86,17 @@ public class PuzzleBoard {
         int relPosX = abs(posX-spacePosX);
         int relPosY = abs(posY-spacePosY);
 
-        System.out.println(relPosX);
-        System.out.println(relPosY);
-
         if ((relPosX + relPosY) == 1) {
             board[spacePosY][spacePosX] = board[posY][posX];
             board[posY][posX] = 0;
             spacePosX = posX;
             spacePosY = posY;
             return true;
-        } else {
+        } else if ((relPosX == 0 || relPosY == 0) && (relPosX + relPosY != 0)) {
+            longSlide(posX, posY);
+            return true;
+        }
+        else {
             return false;
         }
     }
